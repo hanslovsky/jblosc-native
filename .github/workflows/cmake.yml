@@ -70,39 +70,40 @@ jobs:
         path: blosc/libblosc.${{ matrix.lib-extension }}
         
   mvn-build:
-    - runs-on: ubuntu-latest
-    - name: Make resources dir
-      run: |
-        mkdir -p src/main/resources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make resources dir
+        run: |
+          mkdir -p src/main/resources
 
-    - uses: actions/download-artifact@master
-      with:
-        name: libblosc.so
-        path: src/main/resources/libblosc.so
+      - uses: actions/download-artifact@master
+        with:
+          name: libblosc.so
+          path: src/main/resources/libblosc.so
 
-    - uses: actions/download-artifact@master
-      with:
-        name: libblosc.dylib
-        path: src/main/resources/libblosc.dylib
+      - uses: actions/download-artifact@master
+        with:
+          name: libblosc.dylib
+          path: src/main/resources/libblosc.dylib
 
-    - uses: actions/download-artifact@master
-      with:
-        name: libblosc.dll
-        path: src/main/resources/libblosc.dll
+      - uses: actions/download-artifact@master
+        with:
+          name: libblosc.dll
+          path: src/main/resources/libblosc.dll
 
-    - name: Set up Java
-      uses: actions/setup-java@v2
-      with:
-        java-version: '8'
-        distribution: 'zulu'
-        cache: 'maven'
-    - name: Set up CI environment
-      run: .github/setup.sh
-    - name: Execute the build
-      run: .github/build.sh
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'zulu'
+          cache: 'maven'
+      - name: Set up CI environment
+        run: .github/setup.sh
+      - name: Execute the build
+        run: .github/build.sh
 
-    # n otests for now but uncomment once this is more stable
-    # - name: Run test cases
-    #   run: |
-    #     cd ${{ matrix.build-dir || 'c-blosc' }}
-    #     ctest -C Release --output-on-failure --max-width 120
+      # n otests for now but uncomment once this is more stable
+      # - name: Run test cases
+      #   run: |
+      #     cd ${{ matrix.build-dir || 'c-blosc' }}
+      #     ctest -C Release --output-on-failure --max-width 120
