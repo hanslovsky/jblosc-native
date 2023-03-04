@@ -28,6 +28,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
 
     - name: Install packages (Ubuntu)
       if: runner.os == 'Linux' && matrix.packages
@@ -48,8 +50,8 @@ jobs:
     - name: Generate project files
       run: |
         mkdir ${{ matrix.build-dir || '.not-used' }}
-        cd ${{ matrix.build-dir || '.' }}
-        cmake ${{ matrix.build-src-dir || '.' }} ${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-config || 'Release' }} -DBUILD_SHARED_LIBS=OFF -DBUILD_FUZZERS=ON
+        cd ${{ matrix.build-dir || 'c-blosc' }}
+        cmake ${{ matrix.build-src-dir || 'c-blosc' }} ${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-config || 'Release' }} -DBUILD_SHARED_LIBS=OFF -DBUILD_FUZZERS=ON
       env:
         CC: ${{ matrix.compiler }}
         CFLAGS: ${{ matrix.cflags }}
@@ -58,10 +60,10 @@ jobs:
 
     - name: Compile source code
       run: |
-        cd ${{ matrix.build-dir || '.' }}
+        cd ${{ matrix.build-dir || 'c-blosc' }}
         cmake --build . --config ${{ matrix.build-config || 'Release' }}
 
     - name: Run test cases
       run: |
-        cd ${{ matrix.build-dir || '.' }}
+        cd ${{ matrix.build-dir || 'c-blosc' }}
         ctest -C Release --output-on-failure --max-width 120
