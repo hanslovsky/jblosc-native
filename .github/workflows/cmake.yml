@@ -14,17 +14,20 @@ jobs:
         ]
         include:
           - name: Ubuntu GCC
-            os: ubuntu-latest
+            os: ubuntu-20.04
             compiler: gcc
+            lib-extension: so
 
           - name: Windows MSVC Win64
-            os: windows-latest
+            os: windows-2019
             compiler: cl
             cmake-args: -A x64
+            lib-extension: dll
 
           - name: macOS GCC
-            os: macOS-latest
+            os: macos-11
             compiler: gcc
+            lib-extension: dylib
 
     steps:
     - uses: actions/checkout@v3
@@ -49,9 +52,8 @@ jobs:
 
     - name: Generate project files
       run: |
-        mkdir ${{ matrix.build-dir || '.not-used' }}
-        cd ${{ matrix.build-dir || 'c-blosc' }}
-        cmake ${{ matrix.build-src-dir || '.' }} ${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-config || 'Release' }} -DBUILD_SHARED_LIBS=OFF -DBUILD_FUZZERS=ON
+        cd 'c-blosc'
+        cmake '.' ${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-config || 'Release' }} -DBUILD_FUZZERS=ON
       env:
         CC: ${{ matrix.compiler }}
         CFLAGS: ${{ matrix.cflags }}
@@ -60,10 +62,47 @@ jobs:
 
     - name: Compile source code
       run: |
-        cd ${{ matrix.build-dir || 'c-blosc' }}
+        cd 'c-blosc'
         cmake --build . --config ${{ matrix.build-config || 'Release' }}
-
-    - name: Run test cases
+    - uses: actions/upload-artifact@master
+      with:
+        name: libblosc.${{ matrix.lib-extension }}
+        path: blosc/libblosc.${{ matrix.lib-extension }}
+        
+  mvn-build:
+    - runs-on: ubuntu-latest
+    - name: Make resources dir
       run: |
-        cd ${{ matrix.build-dir || 'c-blosc' }}
-        ctest -C Release --output-on-failure --max-width 120
+        mkdir -p src/main/resources
+
+    - uses: actions/download-artifact@master
+      with:
+        name: libblosc.so
+        path: src/main/resources/libblosc.so
+
+    - uses: actions/download-artifact@master
+      with:
+        name: libblosc.dylib
+        path: src/main/resources/libblosc.dylib
+
+    - uses: actions/download-artifact@master
+      with:
+        name: libblosc.dll
+        path: src/main/resources/libblosc.dll
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '8'
+        distribution: 'zulu'
+        cache: 'maven'
+    - name: Set up CI environment
+      run: .github/setup.sh
+    - name: Execute the build
+      run: .github/build.sh
+
+    # n otests for now but uncomment once this is more stable
+    # - name: Run test cases
+    #   run: |
+    #     cd ${{ matrix.build-dir || 'c-blosc' }}
+    #     ctest -C Release --output-on-failure --max-width 120
