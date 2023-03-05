@@ -16,7 +16,7 @@ jobs:
           - name: windows
             os: windows-2019
             compiler: cl
-              cmake-args: -A x64
+            cmake-args: -A x64
             lib-extension: dll
 
           - name: mac
