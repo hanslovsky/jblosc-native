@@ -53,6 +53,9 @@ jobs:
       run: |
         cd 'c-blosc'
         cmake --build . --config ${{ matrix.build-config || 'Release' }}
+    - name: List contents
+      run: |
+        ls 'c-blosc'
     - uses: actions/upload-artifact@master
       with:
         name: libblosc.${{ matrix.lib-extension }}
