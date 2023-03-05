@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.hanslovsky</groupId>
-	<artifactId>n5-service</artifactId>
+	<artifactId>jblosc-native</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 
 	<name>N5 Service</name>
@@ -86,20 +86,36 @@
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 
 		<kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+		<kotlin.version>1.8.20-Beta</kotlin.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.janelia.saalfeldlab</groupId>
-			<artifactId>n5</artifactId>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test</artifactId>
+			<version>${kotlin.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>
-			<artifactId>scijava-common</artifactId>
+			<artifactId>native-lib-loader</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -109,5 +125,35 @@
 			<url>https://maven.scijava.org/content/groups/public</url>
 		</repository>
 	</repositories>
+
+<!--	<build>-->
+<!--		<testSourceDirectory>src/test/kotlin</testSourceDirectory>-->
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.jetbrains.kotlin</groupId>-->
+<!--				<artifactId>kotlin-maven-plugin</artifactId>-->
+<!--				<version>${kotlin.version}</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>compile</id>-->
+<!--						<phase>compile</phase>-->
+<!--						<goals>-->
+<!--							<goal>compile</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>test-compile</id>-->
+<!--						<phase>test-compile</phase>-->
+<!--						<goals>-->
+<!--							<goal>test-compile</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<jvmTarget>1.8</jvmTarget>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+<!--		</plugins>-->
+<!--	</build>-->
 
 </project>
