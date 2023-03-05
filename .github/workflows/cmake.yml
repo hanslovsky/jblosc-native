@@ -55,7 +55,7 @@ jobs:
         cmake --build . --config ${{ matrix.build-config || 'Release' }}
     - name: List contents
       run: |
-        ls 'c-blosc/blosc/blosc_shared.dir/Release' || ls 'c-blosc/blosc'
+        ls 'c-blosc/blosc/Release' 'c-blosc/blosc/win32' 'c-blosc/blosc/CMakeFiles' || ls 'c-blosc/blosc'
     - uses: actions/upload-artifact@master
       with:
         name: libblosc.${{ matrix.lib-extension }}
