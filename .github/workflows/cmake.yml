@@ -16,7 +16,7 @@ jobs:
           - name: windows
             os: windows-2019
             compiler: cl
-            cmake-args: -A x64
+              cmake-args: -A x64
             lib-extension: dll
 
           - name: mac
@@ -55,7 +55,7 @@ jobs:
         cmake --build . --config ${{ matrix.build-config || 'Release' }}
     - name: List contents
       run: |
-        ls 'c-blosc/blosc'
+        ls -halF 'c-blosc/blosc/*'
     - uses: actions/upload-artifact@master
       with:
         name: libblosc.${{ matrix.lib-extension }}
