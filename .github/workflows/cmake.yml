@@ -1,7 +1,7 @@
 name: CI CMake
 on: [push, pull_request]
 jobs:
-  ci-cmake:
+  native:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -60,7 +60,7 @@ jobs:
         
   mvn-build:
     runs-on: ubuntu-latest
-    needs: [ci-make]
+    needs: [native]
     steps:
       - uses: actions/checkout@v3
 
