@@ -60,7 +60,7 @@ jobs:
         
   mvn-build:
     runs-on: ubuntu-latest
-    needs: [windows, mac]
+    needs: [ci-make]
     steps:
       - uses: actions/checkout@v3
 
