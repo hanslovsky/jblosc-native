@@ -92,7 +92,7 @@ jobs:
 
       - name: Make resources dir
         run: |
-          mkdir -p src/main/resources
+          mkdir -p src/main/resources || echo "Probably need to handle this error."
 
       - uses: actions/download-artifact@master
         with:
