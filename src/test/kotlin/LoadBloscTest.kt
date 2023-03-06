@@ -1,4 +1,4 @@
-package com.hanslovsky.jblosc.native
+package com.hanslovsky.jblosc_native
 
 import org.blosc.JBlosc
 import org.junit.Assert
