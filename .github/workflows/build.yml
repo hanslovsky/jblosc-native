@@ -1,4 +1,4 @@
-name: CI CMake
+name: Build Multi-OS
 on: [push, pull_request]
 jobs:
   native:
@@ -65,10 +65,29 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: libblosc.${{ matrix.lib-extension }}
-        path: c-blosc/blosc/${{ matrix.lib-folder }}${{ matrix.lib-prefix }}blosc.${{ matrix.lib-extension }}
+        path: c-blosc/blosc/${{ matrix.lib-folder }}$ {{ matrix.lib-prefix }}blosc.${{ matrix.lib-extension }}
         
   mvn-build:
-    runs-on: ubuntu-latest
+    name: mvn-build-${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+
+        name: [
+          windows,
+          mac,
+          linux
+        ]
+
+        include:
+          - name: windows
+            os: windows-latest
+          - name: mac
+            os: macos-latest
+          - name: linux
+            os: ubuntu-latest
+
     needs: [native]
     steps:
       - uses: actions/checkout@v3
@@ -93,7 +112,9 @@ jobs:
           java-version: '8'
           distribution: 'zulu'
           cache: 'maven'
-      - name: Set up CI environment
-        run: .github/setup.sh
-      - name: Execute the build
-        run: .github/build.sh
+      - name: Maven build and test
+        run: mvn package test
+      # - name: Set up CI environment
+      #   run: .github/setup.sh
+      # - name: Execute the build
+      #   run: .github/build.sh
