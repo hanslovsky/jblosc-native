@@ -18,11 +18,15 @@ jobs:
             compiler: cl
             cmake-args: -A x64
             lib-extension: dll
+            lib-prefix: ''
+            lib-folder: 'Release/'
 
           - name: mac
             os: macos-11
             compiler: gcc
             lib-extension: dylib
+            lib-prefix: lib
+            lib-folder: ''
 
     steps:
     - uses: actions/checkout@v3
@@ -61,7 +65,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: libblosc.${{ matrix.lib-extension }}
-        path: c-blosc/blosc/libblosc.${{ matrix.lib-extension }}
+        path: c-blosc/blosc/${{ matrix.lib-folder }}${{ matrix.lib-prefix }}blosc.${{ matrix.lib-extension }}
         
   mvn-build:
     runs-on: ubuntu-latest
@@ -81,7 +85,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: libblosc.dll
-          path: src/main/resources/natives//windows_64/libblosc.dll
+          path: src/main/resources/natives//windows_64/blosc.dll
 
       - name: Set up Java
         uses: actions/setup-java@v2
