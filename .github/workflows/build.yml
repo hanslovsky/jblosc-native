@@ -93,12 +93,12 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: libblosc.dylib
-          path: src/main/resources/natives//osx_64/libblosc.dylib
+          path: src/main/resources/natives/osx_64/libblosc.dylib
 
       - uses: actions/download-artifact@master
         with:
           name: libblosc.dll
-          path: src/main/resources/natives//windows_64/blosc.dll
+          path: src/main/resources/natives/windows_64/blosc.dll
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -109,6 +109,14 @@ jobs:
 
       - name: Maven build and test
         run: mvn package test
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          fail_on_unmatched_files: true
+          append_body: true
+          files: "target/jblosc-native*.jar"
 
       # TODO:
       # - name: Set up CI environment
