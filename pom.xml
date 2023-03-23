@@ -89,7 +89,7 @@
 		<kotlin.version>1.8.20-Beta</kotlin.version>
 
 		<jblosc.native.include>UNDEFINED</jblosc.native.include>
-		<jblosc.native.classifier>${os.name}-${os.arch}</jblosc.native.classifier>
+		<jblosc.native.classifier>${scijava.natives.classifier.javacpp}</jblosc.native.classifier>
 	</properties>
 
 	<dependencies>
@@ -175,7 +175,8 @@
 			<id>linux-x86-64</id>
 			<activation>
 				<os>
-					<family>Linux</family>
+					<family>unix</family>
+					<name>Linux</name>
 					<arch>amd64</arch>
 				</os>
 				<property>
