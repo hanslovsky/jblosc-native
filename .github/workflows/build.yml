@@ -1,5 +1,7 @@
 name: Build Multi-OS
 on: [push, pull_request]
+permissions:
+  contents: write
 jobs:
   native:
     name: ${{ matrix.name }}
