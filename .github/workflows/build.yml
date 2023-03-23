@@ -1,71 +1,9 @@
 name: Build Multi-OS
 on: [push, pull_request]
+
 permissions:
   contents: write
 jobs:
-  native:
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        name: [
-          windows,
-          mac
-        ]
-        include:
-
-          - name: windows
-            os: windows-2019
-            compiler: cl
-            cmake-args: -A x64
-            lib-extension: dll
-            lib-prefix: 'Release/'
-
-          - name: mac
-            os: macos-11
-            compiler: gcc
-            lib-extension: dylib
-            lib-prefix: 'lib'
-
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: 'true'
-
-    - name: Install packages (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        choco install ninja ${{ matrix.packages }}
-
-    - name: Install packages (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew install ninja ${{ matrix.packages }}
-
-    - name: Generate project files
-      run: |
-        cd 'c-blosc'
-        cmake '.' ${{ matrix.cmake-args }} -DCMAKE_BUILD_TYPE=${{ matrix.build-config || 'Release' }} -DBUILD_FUZZERS=ON
-      env:
-        CC: ${{ matrix.compiler }}
-        CFLAGS: ${{ matrix.cflags }}
-        LDFLAGS: ${{ matrix.ldflags }}
-        CI: true
-
-    - name: Compile source code
-      run: |
-        cd 'c-blosc'
-        cmake --build . --config ${{ matrix.build-config || 'Release' }}
-    - name: List contents
-      run: |
-        ls 'c-blosc/blosc/Release' || ls 'c-blosc/blosc'
-        ls 'c-blosc/blosc/CMakeFiles' || ls 'c-blosc/blosc'
-        ls 'c-blosc/blosc/win32' || ls 'c-blosc/blosc'
-    - uses: actions/upload-artifact@master
-      with:
-        name: libblosc.${{ matrix.lib-extension }}
-        path: c-blosc/blosc/${{ matrix.lib-prefix }}blosc.${{ matrix.lib-extension }}
         
   mvn-build:
     name: mvn-build-${{ matrix.name }}
@@ -88,19 +26,8 @@ jobs:
           - name: linux
             os: ubuntu-latest
 
-    needs: [native]
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@master
-        with:
-          name: libblosc.dylib
-          path: src/main/resources/natives/osx_64/libblosc.dylib
-
-      - uses: actions/download-artifact@master
-        with:
-          name: libblosc.dll
-          path: src/main/resources/natives/windows_64/blosc.dll
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -112,7 +39,7 @@ jobs:
       - name: Maven build and test
         run: mvn package test
 
-      - name: Release
+      - name: GitHub Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
