@@ -53,7 +53,7 @@ jobs:
         run: mvn enforcer:display-info
 
       - name: Maven build and test
-        run: mvn ${{ matrix.extra-build-args || '.not-used' }} package test
+        run: mvn ${{ matrix.extra-build-args || '' }} package test
 
       - name: GitHub Release
         uses: softprops/action-gh-release@v1
