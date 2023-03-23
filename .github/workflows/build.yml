@@ -15,16 +15,23 @@ jobs:
         name: [
           windows,
           mac,
-          linux
+          linux,
+          linux-all-natives
         ]
 
         include:
           - name: windows
             os: windows-latest
+            extra-build-args: ""
           - name: mac
             os: macos-latest
+            extra-build-args: ""
           - name: linux
             os: ubuntu-latest
+            extra-build-args: ""
+          - name: linux-all-natives
+            os: ubuntu-latest
+            extra-build-args: "-Djblosc.native.include_all"
 
     steps:
       - uses: actions/checkout@v3
@@ -46,7 +53,7 @@ jobs:
         run: mvn enforcer:display-info
 
       - name: Maven build and test
-        run: mvn package test
+        run: mvn ${{ matrix.extra-build-args || '.not-used' }} package test
 
       - name: GitHub Release
         uses: softprops/action-gh-release@v1
