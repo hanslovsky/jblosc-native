@@ -36,11 +36,15 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
-      - name: Maven log system information
-        run: |
-          mvn help:evaluate -Dexpression=os.name
-          mvn help:evaluate -Dexpression=os.arch
-          mvn enforcer:display-info
+      - name: Maven log os.name
+        run: mvn help:evaluate -Dexpression="os.name"
+
+      - name: Maven log os.arch
+        run: mvn help:evaluate -Dexpression="os.arch"
+
+      - name: Maven display-info
+        run: mvn enforcer:display-info
+
       - name: Maven build and test
         run: mvn package test
 
